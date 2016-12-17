@@ -37,7 +37,8 @@ time     : show the time
 date     : show the date
 restart  : restart the bot
 quit     : make the bot quit
-whoami   : tell you your username (for testing)```"""
+whoami   : tell you your username
+update   : update the bot (includes restart)```"""
 #lightrail <direction> : display information about the lightrail timetable, for the given direction. lr is an alias for this.```"""
 
 
