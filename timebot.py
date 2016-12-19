@@ -171,7 +171,7 @@ date     : show the date
 restart  : restart the bot
 quit     : make the bot quit
 whoami   : tell you your username
-shopping : work with shopping lists. Use @timebot shopping help for details. ```"""
+list     : work with shopping lists. Use `\list help` for details. ```"""
 #update   : update the bot (includes restart)
 
 #lightrail <direction> : display information about the lightrail timetable, for the given direction. lr is an alias for this.```"""
