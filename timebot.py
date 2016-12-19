@@ -260,7 +260,7 @@ def parse_slack_output(slack_rtm_output):
                         output['text'].split(AT_BOT)[1].strip().lower(), \
                         output['channel']
                 
-                elif (output['text'][0] == '\\'):
+                elif (output['text'][0] == '!'):
                     # return text after the \, whitespace removed
                     return output["user"], \
                         output['text'][1:].strip().lower(), \
