@@ -1,3 +1,18 @@
-*~ #the auto backup files
+#the auto backup files
+*~ 
 
-lists.txt #the shopping list save file
+#the shopping list save file
+lists.txt 
+
+#a couple folders
+starterbot
+env
+
+#some files from early dev
+print_bot_id.py
+east.py
+command_handler*
+
+
+#some personal scripts
+start.sh
