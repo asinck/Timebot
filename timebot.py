@@ -29,12 +29,10 @@ def shopping(commands):
         return sorted(list(a.union(b)))
     
     tokens = [str(i) for i in commands.split()]
-    print tokens
     command = ""
     if (len(tokens) > 1):
         command = tokens[1]
 
-    print "Command:", command
     response = ""
 
     if (len(tokens) == 1 or command not in ["view", "list", "add", "remove", "clear", "merge", "delete", "help"]):
@@ -133,6 +131,15 @@ def shopping(commands):
 
     return response
 
+def saveLists():
+    listFile = open("lists.txt", "w")
+    lists = ""
+    for listName in shoppingList:
+        lists += listName + ":" + " ".join(shoppingList[listName]) + "\n"
+    lists = lists.strip()
+    listFile.write(lists)
+    listFile.close()
+        
 
 #this is a function to print the date    
 def printDate():
@@ -151,6 +158,8 @@ def whoami(ID):
 def restart():
     slack_client.api_call("chat.postMessage", channel=channel,
                           text="Restarting Bot...", as_user=True)
+    
+    saveLists()
     os.execl("timebot.py", '')
 
 #this function pulls updates from github and then restarts the bot.
@@ -220,6 +229,7 @@ def handle_command(user, command, channel):
     if (command_token == "quit"):
         slack_client.api_call("chat.postMessage", channel=channel,
                               text="Bye!", as_user=True)
+        saveLists()
         quit()
 
     elif (command_token in commands):
@@ -250,9 +260,6 @@ def parse_slack_output(slack_rtm_output):
     output_list = slack_rtm_output
     if output_list and len(output_list) > 0:
         for output in output_list:
-            if output and 'text' in output:
-                print output["text"]
-
             if (output and 'text' in output):
                 if (output['text'].find(AT_BOT) == 0):
                     # return text after the @ mention, whitespace removed
@@ -278,6 +285,20 @@ if __name__ == "__main__":
         users = slack_client.api_call("users.list")
         for user in users["members"]:
             userlist[user["id"]] = user["name"]
+
+        
+        #load the lists
+        if (not os.path.isfile("lists.txt")):
+            listFile = open("lists.txt", "w+")
+            listFile.close()
+
+        #this reads a file for restoring lists
+        listFile = open("lists.txt", "r")
+        for line in listFile:
+            listName, items = line.strip().split(":")
+            shoppingList[listName] = items.split()
+        listFile.close()
+        
 
         while True:
             user, command, channel = parse_slack_output(slack_client.rtm_read())
