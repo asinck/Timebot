@@ -1,6 +1,9 @@
 #the auto backup files
 *~ 
 
+#the pyc files
+*.pyc
+
 #the shopping list save file
 lists.txt 
 
