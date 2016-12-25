@@ -1,10 +1,12 @@
 import os
 
+#This is a list of lists. The top level key will be the channel, and
+#will point to a table of list name : items.
 lists = {}
 
 
 #work with lists
-def handle_commands(commands):
+def handle_commands(channel, commands):
     #commands will be in the format
     # list command [item] listName
     # - list is the command to activate this function
@@ -23,6 +25,9 @@ def handle_commands(commands):
         a = set(l1)
         b = set(l2)
         return sorted(list(a.union(b)))
+
+    if (channel not in lists):
+        lists[channel] = {}
     
     #tokens = [str(i) for i in commands.split()]
     tokens = commands.split()
@@ -48,24 +53,28 @@ def handle_commands(commands):
 - item is an argument for add or remove
 - listname is the name of the list```"""
 
-
+        
+    #this shows the user what's in a list
     elif (command == "view"):
         listname = tokens[-1]
-        if (listname in lists):
-            if (lists[listname] == []):
+        if (listname in lists[channel]):
+            if (lists[channel][listname] == []):
                 response = "List %s is empty." %listname
             else:
-                response = "Contents of %s:\n```%s```" %(listname, '\n'.join(lists[listname]))
+                response = "Contents of %s (%d items):\n" %(listname, len(lists[channel][listname]))
+                                                                    
+                response += "```%s```" %'\n'.join(lists[channel][listname])
         else:
             response = "List %s does not exist." %listname
         
-
+    #this shows the user what lists exist in the channel
     elif (command == "list"):
-        if (len(lists) == 0):
+        if (len(lists[channel]) == 0):
             response = "No lists."
         else:
-            response = ", ".join([name for name in lists])
+            response = ", ".join([name for name in lists[channel]])
 
+    #this allows the user to add or remove items from a list
     elif (command in ["add", "remove"]):
         if (len(tokens) < 4):
             response = "You need to specify what to add/remove to which list."
@@ -76,26 +85,28 @@ def handle_commands(commands):
             #this next command changes the splitting from on whitespace to on commas
             items = [i.strip() for i in " ".join(items).split(",")]
             if (command == "add"):
-                if (listname not in lists):
-                    lists[listname] = []
-                lists[listname] = merge(items, lists[listname])
-                response = "%s added to %s." %(', '.join(items), listname)
+                if (listname not in lists[channel]):
+                    lists[channel][listname] = []
+                lists[channel][listname] = merge(items, lists[channel][listname])
+                response = "%s added to list %s." %(', '.join(items), listname)
             else: #(command == "remove")
-                if (listname not in lists):
+                if (listname not in lists[channel]):
                     response = "List %s does not exist."
                 else:
-                    lists[listname] = [item for item in lists[listname] if item not in items]
+                    lists[channel][listname] = [item for item in lists[channel][listname] if item not in items]
                     response = "%s removed from %s." %(', '.join(items), listname)
             
-
+    #this clears a list
     elif (command == "clear"):
         listname = tokens[-1]
-        if (listname in lists):
-            lists[listname] = []
+        if (listname in lists[channel]):
+            lists[channel][listname] = []
             response = "List %s cleared." %listname
         else:
             response = "List %s does not exist." %listname
         
+    #This merges multiple lists into the final list specified. If that
+    #list doesn't exist, a new list is created.
     elif (command == "merge"):
         if (len(tokens) < 4):
             response = "You need to specify at least two lists to merge."
@@ -103,12 +114,12 @@ def handle_commands(commands):
             listname = tokens[-1]
             mergedLists = []
             failedLists = []
-            if (listname not in lists):
-                lists[listname] = []
+            if (listname not in lists[channel]):
+                lists[channel][listname] = {}
             for name in tokens[2:len(tokens)-1]:
-                if name in lists:
+                if name in lists[channel]:
                     mergedLists.append(name)
-                    lists[listname] = merge(lists[listname], lists[name])
+                    lists[channel][listname] = merge(lists[channel][listname], lists[channel][name])
                 else:
                     failedLists.append(name)
 
@@ -119,10 +130,11 @@ def handle_commands(commands):
                            %(', '.join(mergedLists), listname, ', '.join(failedLists))
 
 
+    #this deletes a list
     elif (command == "delete"):
         listname = tokens[-1]
-        if (listname in lists):
-            del(lists[listname])
+        if (listname in lists[channel]):
+            del(lists[channel][listname])
             response = "List %s deleted." %listname
         else:
             response = "List %s does not exist." %listname
@@ -133,8 +145,14 @@ def handle_commands(commands):
 def saveLists():
     listFile = open("lists.txt", "w")
     listsString = ""
-    for listName in lists:
-        listsString += listName + "\t" + " ".join(lists[listName]) + "\n"
+    #iterate through the channels and lists
+    #data will be in format as in example, but tab and comma separated:
+    #general todo feed chickens,ride horses,milk cows
+    #general shopping eggs,cheese,milk,bread
+    #random lotr-characters frodo,sam,pippin,meriadoc
+    for channel in lists:
+        for listName in lists[channel]:
+            listsString += channel + "\t" + listName + "\t" + ",".join(lists[channel][listName]) + "\n"
     listsString = listsString.strip()
     listFile.write(listsString)
     listFile.close()
@@ -148,7 +166,9 @@ def restore_lists():
     #this reads a file for restoring lists
     listFile = open("lists.txt", "r")
     for line in listFile:
-        listName, items = line.strip().split("\t")
-        lists[listName] = [i.strip() for i in items.split(",")]
+        channel, listName, items = line.strip().split("\t")
+        if (channel not in lists):
+            lists[channel] = {}
+        lists[channel][listName] = [i.strip() for i in items.split(",")]
     listFile.close()
 

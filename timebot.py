@@ -101,7 +101,7 @@ def handle_command(user, command, channel):
         if (command_token == "whoami"):
             response = whoami(user)
         elif (command_token == "list"):
-            response = lists.handle_commands(command)
+            response = lists.handle_commands(channel, command)
         else:
             try:
                 response = commands[command_token]()
