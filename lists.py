@@ -24,7 +24,8 @@ def handle_commands(commands):
         b = set(l2)
         return sorted(list(a.union(b)))
     
-    tokens = [str(i) for i in commands.split()]
+    #tokens = [str(i) for i in commands.split()]
+    tokens = commands.split()
     command = ""
     if (len(tokens) > 1):
         command = tokens[1]
@@ -72,6 +73,8 @@ def handle_commands(commands):
             listname = tokens[-1]
             #get all items listed
             items = tokens[2:len(tokens)-1]
+            #this next command changes the splitting from on whitespace to on commas
+            items = [i.strip() for i in " ".join(items).split(",")]
             if (command == "add"):
                 if (listname not in lists):
                     lists[listname] = []
@@ -146,6 +149,6 @@ def restore_lists():
     listFile = open("lists.txt", "r")
     for line in listFile:
         listName, items = line.strip().split("\t")
-        lists[listName] = items.split()
+        lists[listName] = [i.strip() for i in items.split(",")]
     listFile.close()
 

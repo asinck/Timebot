@@ -4,8 +4,8 @@
 #the pyc files
 *.pyc
 
-#the shopping list save file
-lists.txt 
+#text files
+*.txt 
 
 #a couple folders
 starterbot
