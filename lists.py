@@ -37,21 +37,22 @@ def handle_commands(channel, commands):
 
     response = ""
 
-    if (len(tokens) == 1 or command not in ["view", "list", "add", "remove", "clear", "merge", "delete", "help"]):
+    if (len(tokens) == 1 or command not in ["view", "list", "add", "remove", "clear", "merge", "delete", "rename", "help"]):
         response = "Invalid command. Use `\list help` for available commands."
 
     elif (command == "help"):
-        response = """```list command [item] [listName]
+        response = """```list command [item(s)] [listName(s)]
 - list is the command to activate this function
-- command (view|list|add|remove|clear|merge|delete):
+- command (view|list|add|remove|clear|merge|rename|delete):
    - view items in the list
    - list what lists you have
    - add or remove the given item(s) from a specified list
    - clear a specified list
    - merge all lists into the last
+   - rename list1 as list2
    - delete a list
 - item is an argument for add or remove
-- listname is the name of the list```"""
+- listname is the name of the list(s)```"""
 
         
     #this shows the user what's in a list
@@ -138,6 +139,21 @@ def handle_commands(channel, commands):
             response = "List %s deleted." %listname
         else:
             response = "List %s does not exist." %listname
+
+    #this renames a list
+    elif (command == "rename"):
+        if (len(tokens) != 4):
+            response = "You need to specify two lists."
+        else:
+            oldname, newname = tokens[-2], tokens[-1]
+            if (oldname not in lists[channel]):
+                response = "Error: list %s does not exist." %oldname
+            elif (newname in lists[channel]):
+                response = "Error: list %s already exists." %newname
+            else:
+                lists[channel][newname] = [item for item in lists[channel][oldname]]
+                del(lists[channel][oldname])
+                response = "List %s renamed to %s." %(oldname, newname)
 
 
     return response
