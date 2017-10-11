@@ -2,7 +2,7 @@
 
 # This bot has two functionalities:
 #  - view the title of the current xkcd
-#  - view an xkcd comic
+#  - view an xkcd comic + title + alt-text
 #    - if given no arguments, the current comic
 #    - if given a number, the numbered comic
 
