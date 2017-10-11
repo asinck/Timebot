@@ -10,7 +10,7 @@ With `xkcdbot.py`, the following commands can be used:
 
 - help: Show the user a list of available commands.
 - xkcd: Show the title of the current xkcd comic.
-- viewxkcd: Give the URL of the current xkcd comic image, as well as show the title and alt-text. Slack _should_ auto-expand the URL into the image. The output is formatted to show the title and alt-text below the image so they aren't lost above it.
+- viewxkcd [number]: Give the URL of the current (or optionally, numbered) xkcd comic image, as well as show the title and alt-text. Slack _should_ auto-expand the URL into the image. The output is formatted to show the title and alt-text below the image so they aren't lost above it.
 
 
 
