@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 
+# This bot has two functionalities:
+#  - view the title of the current xkcd
+#  - view an xkcd comic
+#    - if given no arguments, the current comic
+#    - if given a number, the numbered comic
+
 import os, time, datetime
 from slackclient import SlackClient
 import lxml.html as web
