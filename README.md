@@ -4,6 +4,14 @@ This is a bot for Slack. Most of what it does is teach me how to program Slack b
 
 To run a command, directly address the bot (ie, `@timebot whoami`) or use a ! (ie, `!whoami`).
 
+With `biblebot.py`, the following commands can be used:
+
+- help, h: Show the user a list of available commands.
+- bible, b <reference>: Look up a bible verse or passage. Uses the https://bible-api.com/ API. Fairly flexible with input.
+- quit, q: tell the bot to exit.
+
+
+
 
 
 With `xkcdbot.py`, the following commands can be used:
@@ -11,6 +19,7 @@ With `xkcdbot.py`, the following commands can be used:
 - help: Show the user a list of available commands.
 - xkcd: Show the title of the current xkcd comic.
 - viewxkcd [number]: Give the URL of the current (or optionally, numbered) xkcd comic image, as well as show the title and alt-text. Slack _should_ auto-expand the URL into the image. The output is formatted to show the title and alt-text below the image so they aren't lost above it.
+- quit, q: tell the bot to exit.
 
 
 
