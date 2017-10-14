@@ -8,13 +8,13 @@ from slackclient import SlackClient
 import urllib2, json
 
 # xkcdbot's ID as an environment variable
-BOT_ID = os.environ.get("BOT_ID")
+BIBLE_BOT_ID = os.environ.get("BIBLE_BOT_ID")
 
 # Constants
-AT_BOT = "<@" + BOT_ID + ">"
+AT_BOT = "<@" + BIBLE_BOT_ID + ">"
 
 # instantiate Slack client
-slack_client = SlackClient(os.environ.get('SLACK_BOT_TOKEN'))
+slack_client = SlackClient(os.environ.get('BIBLE_SLACK_BOT_TOKEN'))
 
 
 # Return the formatted date    
